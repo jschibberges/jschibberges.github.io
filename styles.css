@@ -14,22 +14,59 @@ body {
     gap: 30px;
 }
 
+/* General eye container styles */
 .eye {
-    width: 100px;
-    height: 100px;
-    background-color: white;
+    width: 80px;  /* Made the eye a bit smaller */
+    height: 120px; /* Adjusted height to be more oval */
+    background-color: #f0f0f0;  /* Slightly grey to distinguish the eye from the white background */
     border: 5px solid black;
-    border-radius: 50%;
+    border-radius: 50% / 60%;  /* Makes the eyes more oval, like real eyes */
     position: relative;
+    overflow: hidden;
 }
 
+/* Eyelid styles */
+.eyelid {
+    position: absolute;
+    width: 100%;
+    height: 40px;
+    background-color: #f0f0f0;
+    z-index: 2;
+}
+
+.eyelid.top {
+    top: 0;
+    border-bottom: 5px solid black;
+}
+
+.eyelid.bottom {
+    bottom: 0;
+    border-top: 5px solid black;
+}
+
+/* Pupil styles */
 .pupil {
     width: 30px;
     height: 30px;
     background-color: black;
     border-radius: 50%;
     position: absolute;
-    top: 35px;
-    left: 35px;
-    transition: all 0.1s ease-in-out;
+    top: 45px;  /* Adjusted positioning due to new eye shape */
+    left: 25px;
+    transition: all 0.3s ease-in-out;
+}
+
+/* Mobile adjustments */
+@media only screen and (max-width: 600px) {
+    .eye {
+        width: 50px;  /* Smaller eyes for mobile */
+        height: 80px;  /* Slightly adjusted height */
+    }
+
+    .pupil {
+        width: 20px;
+        height: 20px;
+        top: 30px;  /* Adjusted to center pupil for smaller eyes */
+        left: 15px;
+    }
 }
