@@ -1,72 +1,91 @@
+:root {
+    --bg: white;
+    --sclera: #f0f0f0;
+    --lid: #f0f0f0;
+    --ink: black;
+    --w: clamp(50px, 10vw, 80px);  /* eye width, scales everything else */
+    --line: calc(var(--w) / 16);
+}
+
+/* In the dark only the slit between the lids stays visible */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg: #0a0a0a;
+        --sclera: #e6e6e6;
+        --lid: #0a0a0a;
+    }
+}
+
 body {
     margin: 0;
-    padding: 0;
-    background-color: white;
+    background-color: var(--bg);
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
+    height: 100dvh;
     overflow: hidden;
 }
 
-.eyes-container {
+.eyes {
+    --open: 0;  /* 0 = closed, 1 = the usual narrow slit; set from script.js */
     display: flex;
-    gap: 30px;
+    gap: calc(var(--w) * 0.375);
+    visibility: hidden;
 }
 
-/* General eye container styles */
+.eyes.visible {
+    visibility: visible;
+}
+
 .eye {
-    width: 80px;  /* Made the eye a bit smaller */
-    height: 120px; /* Adjusted height to be more oval */
-    background-color: #f0f0f0;  /* Slightly grey to distinguish the eye from the white background */
-    border: 5px solid black;
-    border-radius: 50% / 60%;  /* Makes the eyes more oval, like real eyes */
+    width: var(--w);
+    height: calc(var(--w) * 1.5);
+    background-color: var(--sclera);
+    border: var(--line) solid var(--ink);
+    border-radius: 50% / 60%;
     position: relative;
     overflow: hidden;
 }
 
-/* Eyelid styles */
-.eyelid {
-    position: absolute;
-    width: 100%;
-    height: 40px;
-    background-color: #f0f0f0;
-    z-index: 2;
-}
-
-.eyelid.top {
-    top: 0;
-    border-bottom: 5px solid black;
-}
-
-.eyelid.bottom {
-    bottom: 0;
-    border-top: 5px solid black;
-}
-
-/* Pupil styles */
 .pupil {
-    width: 30px;
-    height: 30px;
-    background-color: black;
+    width: calc(var(--w) * 0.375);
+    aspect-ratio: 1;
+    background-color: var(--ink);
     border-radius: 50%;
     position: absolute;
-    top: 45px;  /* Adjusted positioning due to new eye shape */
-    left: 25px;
-    transition: all 0.3s ease-in-out;
+    top: 50%;
+    left: 50%;
+    transform: translate(calc(-50% + var(--x, 0px)), calc(-50% + var(--y, 0px)));
+    transition: transform 0.12s ease-out;
 }
 
-/* Mobile adjustments */
-@media only screen and (max-width: 600px) {
-    .eye {
-        width: 50px;  /* Smaller eyes for mobile */
-        height: 80px;  /* Slightly adjusted height */
-    }
+/* Each lid covers half the eye when closed and slides back a quarter when open */
+.lid {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 50%;
+    box-sizing: border-box;
+    background-color: var(--lid);
+    transition: transform var(--lid-speed, 0.09s) ease-in-out;
+}
 
-    .pupil {
-        width: 20px;
-        height: 20px;
-        top: 30px;  /* Adjusted to center pupil for smaller eyes */
-        left: 15px;
+.lid.top {
+    top: 0;
+    border-bottom: var(--line) solid var(--ink);
+    transform: translateY(calc(var(--open) * -25%));
+}
+
+.lid.bottom {
+    bottom: 0;
+    border-top: var(--line) solid var(--ink);
+    transform: translateY(calc(var(--open) * 25%));
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .pupil,
+    .lid {
+        transition: none;
     }
 }
